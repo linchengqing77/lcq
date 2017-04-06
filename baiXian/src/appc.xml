@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc 
+		http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd
+		http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+		http://www.springframework.org/schema/context 
+		http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+
+	<context:property-placeholder location="classpath:db.properties" />
+	<!-- 数据库连接 -->
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" >
+		<property name="driverClassName" value="${driver}"></property>
+		<property name="url" value="${url}"></property>
+		<property name="username" value="${usernames}"></property>
+		<property name="password" value="${pwd}"></property>
+	</bean>
+	<!-- 连接工厂 -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean" >
+		<property name="dataSource" ref="dataSource"></property>
+		<property name="configLocation" value="classpath:myBatis_conf.xml"></property>
+	</bean>
+	
+	<!-- 引入spring注解 -->
+	<context:annotation-config></context:annotation-config>
+	<context:component-scan base-package="/"></context:component-scan>
+
+	<mvc:annotation-driven></mvc:annotation-driven><!-- 引入mvc的注解驱动 -->
+	<!-- 拼接请求返回视图页面的URL -->
+	<bean id="myurlpj" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/"></property>
+		<property name="suffix" value=".jsp" ></property>
+	</bean>
+	
+	<!-- 不拦截页面加载资源设置 -->
+	<mvc:default-servlet-handler />
+</beans>
